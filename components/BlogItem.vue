@@ -1,6 +1,6 @@
 <template>
   <app-box class="blog-item">
-    <p class="date"> {{ date }} </p>
+    <p class="date"> {{ formatDate }} </p>
     <p class="title overflow ellipsis">{{ title }}</p>
     <p class="content overflow">{{ content }} </p>
   </app-box>
@@ -8,6 +8,8 @@
 
 <script>
 import AppBox from '@/components/AppBox'
+import moment from 'moment'
+
 export default {
   components: {
     AppBox
@@ -22,7 +24,7 @@ export default {
       required: true
     },
     date: {
-      type: String,
+      type: Date,
       required: true
     },
     draft: {
@@ -32,6 +34,11 @@ export default {
     id: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    formatDate () {
+      return moment(this.date).format('YYYY-MM-DD HH:mm')
     }
   }
 }

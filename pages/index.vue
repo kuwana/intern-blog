@@ -1,17 +1,33 @@
 <template>
   <section class="container item-list-container">
     <div class="content">
-      <blog-item-list></blog-item-list>
+      <blog-item-list :posts="posts" />
     </div>
   </section>
 </template>
 
 <script>
 import BlogItemList from '@/components/BlogItemList'
+import firebase from '@/plugins/firebase'
 
 export default {
   components: {
     BlogItemList
+  },
+  data () {
+    return {
+      posts: []
+    }
+  },
+  created () {
+    const db = firebase.firestore()
+    db.collection('posts').get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        const data = doc.data()
+        data.id = doc.id
+        this.posts.push(data)
+      })
+    })
   }
 }
 </script>

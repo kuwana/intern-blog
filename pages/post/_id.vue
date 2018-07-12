@@ -1,17 +1,26 @@
 <template>
   <div class="container">
     <section class="blog-container">
-      <h1 class="title">ブログですよー</h1>
-      <div class="content">
-        あのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォあのハートイーヴォ
-      </div>
+      <h1 class="title">{{post.title}}</h1>
+      <div class="content">{{post.content}}</div>
     </section>
   </div>
 </template>
 
 <script>
+import firebase from '@/plugins/firebase'
 export default {
-
+  data () {
+    return {
+      post: null
+    }
+  },
+  created () {
+    const db = firebase.firestore()
+    db.collection('posts').doc(this.$route.params.id).get().then(doc => {
+      this.post = doc.data()
+    })
+  }
 }
 </script>
 

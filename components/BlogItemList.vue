@@ -1,6 +1,6 @@
 <template>
   <section class="item-list">
-    <div v-for="item in data" :key="item.id" class="item">
+    <div v-if="posts.length > 0" v-for="item in posts" :key="item.id" class="item">
       <nuxt-link :to="`post/${item.id}`">
         <blog-item :title="item.title" :content="item.content" :date="item.date" :id="item.id" :draft="item.draft"></blog-item>
       </nuxt-link>
@@ -14,22 +14,14 @@ export default {
   components: {
     BlogItem
   },
+  props: {
+    posts: {
+      type: Array
+    },
+  },
   data() {
     return {
       data: []
-    }
-  },
-  created() {
-    const content = 'あのハートイヴォの透き通ったあのハートイヴォの透き通ったあのハートイヴォの透き通ったあのハートイヴォの透き通ったあのハートイヴォの透き通ったあのハートイヴォの透き通ったあのハートイヴォの透き通った'
-
-    for (let i =0; i <=5; i++) {
-      this.data.push({
-        id: `${i}`,
-        date: '2018/05/21 12:00',
-        draft: false,
-        title: `ブログ${i}`,
-        content: content
-      })
     }
   }
 }

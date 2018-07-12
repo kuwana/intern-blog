@@ -20,7 +20,9 @@ module.exports = {
   /*
   ** Build configuration
   */
+  plugins: ['@/plugins/firebase'],
   build: {
+    vendor: ['firebase'],
     /*
     ** Run ESLint on save
     */

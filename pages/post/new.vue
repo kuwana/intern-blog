@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h1>新規ページ</h1>
   </div>
 </template>
