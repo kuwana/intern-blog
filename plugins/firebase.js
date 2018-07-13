@@ -13,4 +13,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config)
 }
 
-export default firebase
+const Auth = firebase.auth()
+const DB = firebase.firestore()
+
+export { Auth, DB }

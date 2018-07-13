@@ -8,7 +8,7 @@
 
 <script>
 import BlogItemList from '@/components/BlogItemList'
-import firebase from '@/plugins/firebase'
+import { DB } from '@/plugins/firebase'
 
 export default {
   components: {
@@ -20,8 +20,7 @@ export default {
     }
   },
   created () {
-    const db = firebase.firestore()
-    db.collection('posts').get().then(querySnapshot => {
+    DB.collection('posts').get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
         const data = doc.data()
         data.id = doc.id
