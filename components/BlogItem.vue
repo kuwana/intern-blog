@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     formatDate () {
-      return moment(this.date).format('YYYY-MM-DD HH:mm')
+      return moment(this.date*1000).format('YYYY-MM-DD HH:mm')
     }
   }
 }
