@@ -9,6 +9,7 @@
       <textarea class="content-field" v-model="post.content" placeholder="投稿内容"></textarea>
       <button v-if="!loading" class="button" @click="submit">更新</button>
       <button v-else class="button bg-grey" disabled>送信中</button>
+      <button class="button button-danger" @click="postDelete">削除</button>
       <input type="checkbox" id="draft" class="draft-check" v-model="post.draft">
       <label for="draft">下書き（非公開）</label>
     </div>
@@ -68,12 +69,24 @@ export default {
         .finally(() => {
           this.loading = false
         })
+    },
+    postDelete() {
+      window.alert('投稿を削除しますか？')
+      DB.collection('posts').doc(this.$route.params.id).delete().then(() => {
+        this.$router.push('/')
+      }).catch(err => {
+        console.log(err)
+      })
+      return false
     }
   }
 }
 </script>
 
 <style scoped>
+.button-danger {
+  background: #a94442!important;
+}
 .alert {
   padding: 0.75rem 1.25rem;
   margin-bottom: 1rem;
