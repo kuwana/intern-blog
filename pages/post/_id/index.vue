@@ -26,6 +26,7 @@
           <div v-else>
             <input type="text" v-model="editingComment.content">
             <button @click="updateComment">更新</button>
+            <button @click="deleteComment">削除</button>
             <span @click="cancelComment">x</span>
           </div>
         </li>
@@ -125,6 +126,21 @@ export default {
         })
         .then(() => {
           console.log('updated!')
+          this.editingComment = {}
+          this.fetchComments()
+        })
+    },
+    deleteComment () {
+      if (!window.confirm('本当に削除してよろしいですか？')) {
+        return false
+      }
+      DB.collection('posts')
+        .doc(this.$route.params.id)
+        .collection('comments')
+        .doc(this.editingComment.id)
+        .delete()
+        .then(() => {
+          console.log('deleted!')
           this.editingComment = {}
           this.fetchComments()
         })

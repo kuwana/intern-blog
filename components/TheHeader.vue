@@ -13,9 +13,10 @@
           </nuxt-link>
         </div>
         <div class="outline">
-          <nuxt-link to="/login" class="none-deco">
+          <nuxt-link v-if="currentUser" to="/login" class="none-deco">
             ログイン
           </nuxt-link>
+          <div v-else>ログイン済</div>
         </div>
       </div>
     </nav>
@@ -23,7 +24,16 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
+  computed: {
+    currentUser () {
+      return this.$store.state.auth.currentUser
+    }
+  },
+  created () {
+    console.log('currentUser', this.currentUser)
+  }
 
 }
 </script>

@@ -5,13 +5,13 @@
         <form @submit.prevent="onSubmit" class="login-form">
           <div>
             <label for="email" class="label">メールアドレス</label>
-            <input type="email" placeholder="admin@example.com" id="email" class="input" />
+            <input type="email" v-model="email" placeholder="admin@example.com" id="email" class="input" />
           </div>
           <div class="row">
             <label for="password" class="label">パスワード</label>
-            <input type="password" placeholder="******" id="password" class="input" />
+            <input type="password" v-model="password" placeholder="******" id="password" class="input" />
           </div>
-          <button type="submit" class="login-btn shadow">ログイン</button>
+          <button type="button" @click="login" class="login-btn shadow">ログイン</button>
         </form>
       </div>
     </div>
@@ -19,8 +19,48 @@
 </template>
 
 <script>
+import { Auth } from '@/plugins/firebase'
+import { mapMutations } from 'vuex'
 export default {
+  data () {
+    return {
+      errors: [],
+      email: '',
+      passpord: ''
+    }
+  },
+  created () {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
 
+      } else {
+        // No user is signed in.
+      }
+    });
+  },
+  methods: {
+    validate() {
+      if (this.email === '') {
+        this.errors.push('メールアドレスを入力してください。')
+      }
+      if (this.password === '') {
+        this.errors.push('パスワードを入力してください。')
+      }
+      if (this.errors.length > 0) {
+        return false
+      }
+      return true
+    },
+    login () {
+      if (!this.validate()) {
+        return false
+      }
+      Auth.signInWithEmailAndPassword(this.email, this.password)
+        .catch(error => {
+          window.alert(error.message)
+        })
+    }
+  }
 }
 </script>
 
