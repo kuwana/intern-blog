@@ -30,6 +30,7 @@ export default {
 <style scoped>
 .item {
   margin-bottom: 16px;
+  width: 33.3%;
 }
 .item-list {
   display: flex;

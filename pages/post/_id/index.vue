@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container column">
     <section class="blog-container" v-if="post">
       <a :href="'/post/'+$route.params.id+'/edit'">編集</a>
       <span>{{formatDate}}</span>
@@ -7,6 +7,15 @@
         {{post.title}}<span v-if="post.draft">（下書き）</span>
       </h1>
       <div class="content">{{post.content}}</div>
+    </section>
+    <section class="blog-container">
+      <h2>コメント</h2>
+      <ul>
+        <li v-for="(item, i) in comments" :key="i" class="content">
+          {{ item.comment }}
+          {{ item.createdAt }}
+        </li>
+      </ul>
     </section>
   </div>
 </template>
@@ -22,7 +31,18 @@ export default {
         content: '',
         date: 0,
         draft: false
-      }
+      },
+      comments: [
+        {
+          id: 1,
+          user: {
+            name: 'kuwana'
+          },
+          comment: 'いつも拝見しています！',
+          createdAt: new Date().getTime(),
+          updatedAt: new Date().getTime(),
+        }
+      ]
     }
   },
   computed: {
@@ -41,7 +61,7 @@ export default {
 
 <style scoped>
 .blog-container {
-  margin: 1rem 0;
+  margin: 1rem auto;
   padding: 0 1rem;
 }
 .title {
@@ -54,5 +74,8 @@ export default {
   max-width: 600px;
   text-align: justify;
   line-height: 1.58;
+}
+.column {
+  flex-direction: column;
 }
 </style>

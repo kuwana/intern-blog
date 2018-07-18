@@ -8,7 +8,6 @@ const config = {
   projectId: 'internship-nuxt-blog',
   storageBucket: 'internship-nuxt-blog.appspot.com',
   messagingSenderId: '774369886747',
-  timestampsInSnapshots: true
 }
 if (!firebase.apps.length) {
   firebase.initializeApp(config)
@@ -17,5 +16,7 @@ if (!firebase.apps.length) {
 const Auth = firebase.auth()
 const DB = firebase.firestore()
 const TIMESTAMP = firebase.firestore.FieldValue.serverTimestamp()
+
+DB.settings({timestampsInSnapshots: true})
 
 export { Auth, DB, TIMESTAMP }

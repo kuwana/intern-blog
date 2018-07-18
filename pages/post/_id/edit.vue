@@ -33,7 +33,9 @@ export default {
     }
   },
   created () {
+    console.time('test')
     DB.collection('posts').doc(this.$route.params.id).get().then(doc => {
+      console.timeEnd('test')
       this.post = doc.data()
     })
   },
