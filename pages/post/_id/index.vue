@@ -2,18 +2,32 @@
   <div class="container column">
     <section class="blog-container" v-if="post">
       <a :href="'/post/'+$route.params.id+'/edit'">編集</a>
-      <span>{{formatDate}}</span>
+      <span>{{ formatDate }}</span>
       <h1 class="title">
-        {{post.title}}<span v-if="post.draft">（下書き）</span>
+        {{ post.title }}<span v-if="post.draft">（下書き）</span>
       </h1>
-      <div class="content">{{post.content}}</div>
+      <div class="content">{{ post.content }}</div>
     </section>
     <section class="blog-container">
       <h2>コメント</h2>
+      <div>
+        <ul v-if="errors.length > 0" class="alert">
+          <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
+        </ul>
+        <textarea class="comment-field" v-model="newComment" placeholder="コメントを書く"></textarea>
+        <button @click="submitComment">コメントする</button>
+      </div>
       <ul>
-        <li v-for="(item, i) in comments" :key="i" class="content">
-          {{ item.comment }}
-          {{ item.createdAt }}
+        <li v-for="comment in comments" :key="comment.id" @click="editComment(comment)" class="content">
+          <div v-if="editingComment.id !== comment.id">
+            {{ comment.content }}
+            {{ comment.createdAt }}
+          </div>
+          <div v-else>
+            <input type="text" v-model="editingComment.content">
+            <button @click="updateComment">更新</button>
+            <span @click="cancelComment">x</span>
+          </div>
         </li>
       </ul>
     </section>
@@ -26,23 +40,19 @@ import moment from 'moment'
 export default {
   data () {
     return {
+      errors: [],
+      newComment: '',
+      editingComment: {
+        id: '',
+        content: ''
+      },
       post: {
         title: '',
         content: '',
         date: 0,
         draft: false
       },
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: 'kuwana'
-          },
-          comment: 'いつも拝見しています！',
-          createdAt: new Date().getTime(),
-          updatedAt: new Date().getTime(),
-        }
-      ]
+      comments: []
     }
   },
   computed: {
@@ -51,10 +61,99 @@ export default {
     }
   },
   created () {
-    // FIXME: 取得がめちゃめちゃ遅い...
-    DB.collection('posts').doc(this.$route.params.id).get().then(doc => {
-      this.post = doc.data()
-    })
+    this.fetchPost()
+    this.fetchComments()
+  },
+  methods: {
+    validateNew () {
+      this.errors = []
+      if (this.newComment.length <= 0) {
+        this.errors.push('コメントを入力してください。')
+      }
+      if (this.errors.length > 0) {
+        return false
+      }
+      return true
+    },
+    // FIXME: 共通化
+    validateEdit () {
+      this.errors = []
+      if (this.editingComment.content.length <= 0) {
+        this.errors.push('コメントを入力してください。')
+      }
+      if (this.errors.length > 0) {
+        return false
+      }
+      return true
+    },
+    submitComment () {
+      if (!this.validateNew()) {
+        return false
+      }
+      DB.collection('posts')
+        .doc(this.$route.params.id)
+        .collection('comments')
+        .add({
+          content: this.newComment,
+        })
+        .then(docRef => {
+          this.fetchComments()
+          this.newComment = ''
+        })
+        .catch(error => {
+          console.error("Error adding document: ", error);
+        })
+    },
+    editComment (comment) {
+      this.editingComment = comment
+    },
+    cancelComment () {
+      // FIXME:
+      this.editingComment = {}
+    },
+    updateComment () {
+      if (!this.validateEdit()) {
+        return false
+      }
+      DB.collection('posts')
+        .doc(this.$route.params.id)
+        .collection('comments')
+        .doc(this.editingComment.id)
+        .update({
+          content: this.editingComment.content,
+          // updatedAt: new Date().now()
+        })
+        .then(() => {
+          console.log('updated!')
+          this.editingComment = {}
+          this.fetchComments()
+        })
+    },
+    fetchPost () {
+      DB.collection('posts')
+        .doc(this.$route.params.id)
+        .get()
+        .then(doc => {
+          this.post = doc.data()
+        })
+    },
+    fetchComments () {
+      DB.collection('posts')
+        .doc(this.$route.params.id)
+        .collection('comments')
+        .get()
+        .then(querySnapshot => {
+          this.comments = []
+          querySnapshot.forEach(doc => {
+            const data = doc.data()
+            data.id = doc.id
+            this.comments.push(data)
+          })
+        })
+        .catch(error => {
+          console.error("Error get document: ", error);
+        })
+    }
   }
 }
 </script>
@@ -77,5 +176,9 @@ export default {
 }
 .column {
   flex-direction: column;
+}
+.comment-field {
+  width: 100%;
+  height: 3rem;
 }
 </style>
