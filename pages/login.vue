@@ -2,16 +2,16 @@
   <div class="login-page">
     <div class="login-container shadow">
       <div class="login-content">
-        <form @submit.prevent="onSubmit" class="login-form">
+        <form @submit.prevent="loginSubmit" class="login-form">
           <div>
             <label for="email" class="label">メールアドレス</label>
-            <input type="email" v-model="email" placeholder="admin@example.com" class="input" />
+            <input type="text" v-model="email" id="email" placeholder="admin@example.com" class="input" />
           </div>
           <div class="row">
             <label for="password" class="label">パスワード</label>
-            <input type="password" v-model="password" placeholder="******" class="input" />
+            <input type="password" v-model="password" id="email" placeholder="******" class="input" />
           </div>
-          <button @click="login" class="login-btn shadow">ログイン</button>
+          <button type="submit" class="login-btn shadow">ログイン</button>
         </form>
       </div>
     </div>
@@ -26,19 +26,18 @@ export default {
     return {
       errors: [],
       email: '',
-      passpord: ''
+      password: ''
     }
   },
   created () {
     Auth.onAuthStateChanged(function(user) {
       if (user) {
-        console.log('set!')
-        this.$store.commit('auth/setUser', user)
+        this.$store.comit('auth/setUser', user)
       } else {
         // No user is signed in.
         console.log('no set...')
       }
-    });
+    })
   },
   methods: {
     validate() {
@@ -53,12 +52,10 @@ export default {
       }
       return true
     },
-    login () {
-      console.log('will login')
+    loginSubmit () {
       if (!this.validate()) {
         return false
       }
-      console.log('will login')
       Auth.signInWithEmailAndPassword(this.email, this.password)
         .catch(error => {
           window.alert(error.message)

@@ -32,7 +32,7 @@ export default {
     })
   },
   created () {
-    console.log('currentUser', this.currentUser)
+    console.log('currentUser', this.currentUser.email)
   }
 
 }
