@@ -5,13 +5,13 @@
         <form @submit.prevent="onSubmit" class="login-form">
           <div>
             <label for="email" class="label">メールアドレス</label>
-            <input type="email" v-model="email" placeholder="admin@example.com" id="email" class="input" />
+            <input type="email" v-model="email" placeholder="admin@example.com" class="input" />
           </div>
           <div class="row">
             <label for="password" class="label">パスワード</label>
-            <input type="password" v-model="password" placeholder="******" id="password" class="input" />
+            <input type="password" v-model="password" placeholder="******" class="input" />
           </div>
-          <button type="button" @click="login" class="login-btn shadow">ログイン</button>
+          <button @click="login" class="login-btn shadow">ログイン</button>
         </form>
       </div>
     </div>
@@ -30,11 +30,13 @@ export default {
     }
   },
   created () {
-    firebase.auth().onAuthStateChanged(function(user) {
+    Auth.onAuthStateChanged(function(user) {
       if (user) {
-
+        console.log('set!')
+        this.$store.commit('auth/setUser', user)
       } else {
         // No user is signed in.
+        console.log('no set...')
       }
     });
   },
@@ -52,9 +54,11 @@ export default {
       return true
     },
     login () {
+      console.log('will login')
       if (!this.validate()) {
         return false
       }
+      console.log('will login')
       Auth.signInWithEmailAndPassword(this.email, this.password)
         .catch(error => {
           window.alert(error.message)

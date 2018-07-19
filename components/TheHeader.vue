@@ -24,12 +24,12 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   computed: {
-    currentUser () {
-      return this.$store.state.auth.currentUser
-    }
+    ...mapState({
+      currentUser: state => state.auth.currentUser
+    })
   },
   created () {
     console.log('currentUser', this.currentUser)
