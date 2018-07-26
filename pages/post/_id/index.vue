@@ -1,7 +1,7 @@
 <template>
   <div class="container column">
     <section class="blog-container" v-if="post">
-      <a :href="'/post/'+$route.params.id+'/edit'">編集</a>
+      <a v-if="user" :href="'/post/'+$route.params.id+'/edit'">編集</a>
       <span>{{ formatDate }}</span>
       <h1 class="title">
         {{ post.title }}<span v-if="post.draft">（下書き）</span>
@@ -36,12 +36,13 @@
 </template>
 
 <script>
-import { DB } from '@/plugins/firebase'
+import { Auth, DB } from '@/plugins/firebase'
 import moment from 'moment'
 export default {
   data () {
     return {
       errors: [],
+      user: Auth.currentUser,
       newComment: '',
       editingComment: {
         id: '',

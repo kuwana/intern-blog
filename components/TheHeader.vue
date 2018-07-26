@@ -13,7 +13,7 @@
           </nuxt-link>
         </div>
         <div class="outline">
-          <nuxt-link v-if="currentUser" to="/login" class="none-deco">
+          <nuxt-link v-if="!user" to="/login" class="none-deco">
             ログイン
           </nuxt-link>
           <div v-else>ログイン済</div>
@@ -24,15 +24,17 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
+import { Auth } from '@/plugins/firebase'
 export default {
   computed: {
-    ...mapState({
-      currentUser: state => state.auth.currentUser
-    })
+  },
+  data () {
+    return {
+      user: Auth.currentUser
+    }
   },
   created () {
-    console.log('currentUser', this.currentUser.email)
   }
 
 }

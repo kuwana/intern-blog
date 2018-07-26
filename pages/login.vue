@@ -32,8 +32,8 @@ export default {
   created () {
     Auth.onAuthStateChanged(user => {
       if (user) {
+        // this.$store.commit('auth/setUser', user)
         console.log('set!', user.email)
-        this.$store.commit('auth/setUser', user)
       } else {
         // No user is signed in.
         console.log('no set...')
