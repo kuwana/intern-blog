@@ -16,7 +16,7 @@
           <nuxt-link v-if="!user" to="/login" class="none-deco">
             ログイン
           </nuxt-link>
-          <div v-else>ログイン済</div>
+          <div v-else @click="logout">ログアウト</div>
         </div>
       </div>
     </nav>
@@ -31,12 +31,26 @@ export default {
   },
   data () {
     return {
-      user: Auth.currentUser
+      user: null
     }
   },
   created () {
+    Auth.onAuthStateChanged(user => {
+      if (user) {
+        this.user = user
+      }
+    })
+  },
+  methods: {
+    logout () {
+      Auth.signOut().then(() => {
+        this.user = null
+        then.$router.push('/login')
+      }).catch(err => {
+      console.log(errlo)
+      })
+    }
   }
-
 }
 </script>
 

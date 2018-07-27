@@ -33,7 +33,7 @@ export default {
     Auth.onAuthStateChanged(user => {
       if (user) {
         // this.$store.commit('auth/setUser', user)
-        console.log('set!', user.email)
+        this.$router.push('/')
       } else {
         // No user is signed in.
         console.log('no set...')

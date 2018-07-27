@@ -1,5 +1,5 @@
 <template>
-  <div class="new-container">
+  <div v-if="user" class="new-container">
     <div class="form-body">
       <h1>編集ページ</h1>
       <ul v-if="errors.length > 0" class="alert alert-danger">
@@ -17,11 +17,12 @@
 </template>
 
 <script>
-import { DB, TIMESTAMP } from '@/plugins/firebase'
+import { Auth, DB, TIMESTAMP } from '@/plugins/firebase'
 import moment from 'moment'
 export default {
   data () {
     return {
+      user: null,
       post: {
         title: '',
         content: '',
@@ -32,7 +33,14 @@ export default {
       loading: false,
     }
   },
-  created () {
+  mounted () {
+    Auth.onAuthStateChanged(user => {
+      if (!user) {
+        // TODO: とりあえず前ページに戻しちゃう。403Forbiddenのほうがいいかな。
+        this.$router.go(-1)
+      }
+      this.user = user
+    })
     DB.collection('posts').doc(this.$route.params.id).get().then(doc => {
       this.post = doc.data()
     })

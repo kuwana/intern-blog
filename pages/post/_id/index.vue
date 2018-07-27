@@ -1,7 +1,7 @@
 <template>
   <div class="container column">
     <section class="blog-container" v-if="post">
-      <a v-if="user" :href="'/post/'+$route.params.id+'/edit'">編集</a>
+      <nuxt-link v-if="user" :to="'/post/'+$route.params.id+'/edit'">編集</nuxt-link>
       <span>{{ formatDate }}</span>
       <h1 class="title">
         {{ post.title }}<span v-if="post.draft">（下書き）</span>
@@ -10,7 +10,7 @@
     </section>
     <section class="blog-container">
       <h2>コメント</h2>
-      <div>
+      <div v-if="user">
         <ul v-if="errors.length > 0" class="alert">
           <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
         </ul>
