@@ -41,6 +41,7 @@ import moment from 'moment'
 export default {
   data () {
     return {
+      loading: false,
       errors: [],
       user: Auth.currentUser,
       newComment: '',
@@ -63,8 +64,10 @@ export default {
     }
   },
   created () {
-    this.fetchPost()
-    this.fetchComments()
+    this.loading = true
+    Promise.all([this.fetchPost(), this.fetchComments()]).then(() => {
+        this.loading = false
+    })
   },
   methods: {
     validateNew () {
@@ -147,29 +150,39 @@ export default {
         })
     },
     fetchPost () {
-      DB.collection('posts')
-        .doc(this.$route.params.id)
-        .get()
-        .then(doc => {
-          this.post = doc.data()
-        })
+      return new Promise((resolve, reject) => {
+        DB.collection('posts')
+          .doc(this.$route.params.id)
+          .get()
+          .then(doc => {
+            this.post = doc.data()
+            resolve()
+          })
+          .catch(err => {
+            reject()
+          })
+      })
     },
     fetchComments () {
-      DB.collection('posts')
-        .doc(this.$route.params.id)
-        .collection('comments')
-        .get()
-        .then(querySnapshot => {
-          this.comments = []
-          querySnapshot.forEach(doc => {
-            const data = doc.data()
-            data.id = doc.id
-            this.comments.push(data)
+      return new Promise((resolve, reject) => {
+        DB.collection('posts')
+          .doc(this.$route.params.id)
+          .collection('comments')
+          .get()
+          .then(querySnapshot => {
+            this.comments = []
+            querySnapshot.forEach(doc => {
+              const data = doc.data()
+              data.id = doc.id
+              this.comments.push(data)
+              resolve()
+            })
           })
-        })
-        .catch(error => {
-          console.error("Error get document: ", error);
-        })
+          .catch(error => {
+            console.error("Error get document: ", error);
+            reject()
+          })
+      })
     }
   }
 }
