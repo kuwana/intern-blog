@@ -12,6 +12,10 @@
             <input type="password" v-model="password" id="email" placeholder="******" class="input" />
           </div>
           <button type="submit" class="login-btn shadow">ログイン</button>
+          <button type="button" @click="oauth" class="login-btn shadow google">
+            <img src="@/assets/google-icon.png" alt="google icon" class="google-icon">
+            <span>Googleでログイン</span>
+          </button>
         </form>
       </div>
     </div>
@@ -19,7 +23,7 @@
 </template>
 
 <script>
-import { Auth } from '@/plugins/firebase'
+import { Auth, firebase } from '@/plugins/firebase'
 import { mapMutations } from 'vuex'
 export default {
   data () {
@@ -61,6 +65,20 @@ export default {
         .catch(error => {
           window.alert(error.message)
         })
+    },
+    oauth () {
+      const provider = new firebase.auth.GoogleAuthProvider()
+      Auth.signInWithPopup(provider)
+      .catch(error => {
+        // Handle Errors here.
+        var errorCode = error.code
+        var errorMessage = error.message
+        // The email of the user's account used.
+        var email = error.email
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential
+        console.log('login faild')
+      })
     }
   }
 }
@@ -76,7 +94,8 @@ export default {
 .login-container {
   border-radius: 3px;
   border: 1px solid #ffffff;
-  width: 320px;
+  width: 350px;
+  padding: 1rem;
   background-color: #fff;
 }
 .login-content {
@@ -111,5 +130,17 @@ export default {
   font-weight: 700;
   color: #fff;
   padding: 12px;
+}
+.google {
+  background-color: #fff;
+  color: #555;
+}
+.google > img, .google > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.google-icon {
+  width: 30px;
 }
 </style>

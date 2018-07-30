@@ -24,12 +24,12 @@ export default {
       required: true
     },
     date: {
-      type: Date,
-      required: true
+      type: Number,
+      // required: true
     },
     draft: {
       type: Boolean,
-      required: true
+      // required: true
     },
     id: {
       type: String,

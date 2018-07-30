@@ -19,4 +19,4 @@ const TIMESTAMP = firebase.firestore.FieldValue.serverTimestamp()
 
 DB.settings({timestampsInSnapshots: true})
 
-export { Auth, DB, TIMESTAMP }
+export { firebase, Auth, DB, TIMESTAMP }
