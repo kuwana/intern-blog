@@ -7,7 +7,7 @@
         </nuxt-link>
       </div>
       <div class="nav-link">
-        <div class="outline mr-4">
+        <div v-if="user" class="outline mr-4">
           <nuxt-link to="/post/new" class="none-deco">
             投稿
           </nuxt-link>
@@ -45,9 +45,9 @@ export default {
     logout () {
       Auth.signOut().then(() => {
         this.user = null
-        then.$router.push('/login')
+        this.$router.push('/login')
       }).catch(err => {
-      console.log(errlo)
+        console.log(err)
       })
     }
   }

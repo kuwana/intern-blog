@@ -1,6 +1,6 @@
 <template>
   <div class="new-container">
-    <div class="form-body">
+    <div v-if="user" class="form-body">
       <h1>新規ページ</h1>
       <ul v-if="errors.length > 0" class="alert alert-danger">
         <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
@@ -12,15 +12,19 @@
       <input type="checkbox" id="draft" class="draft-check" v-model="post.draft">
       <label for="draft">下書き（非公開）</label>
     </div>
+    <div v-else>
+      ログインしてないと投稿できません。
+    </div>
   </div>
 </template>
 
 <script>
-import { DB, TIMESTAMP } from '@/plugins/firebase'
+import { DB, Auth, TIMESTAMP } from '@/plugins/firebase'
 import moment from 'moment'
 export default {
   data () {
     return {
+      user: null,
       post: {
         title: '',
         content: '',
@@ -30,6 +34,13 @@ export default {
       errors: [],
       loading: false,
     }
+  },
+  created () {
+    Auth.onAuthStateChanged(user => {
+      if (user) {
+        this.user = user
+      }
+    })
   },
   methods: {
     validate () {
