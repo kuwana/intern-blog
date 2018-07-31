@@ -2,9 +2,7 @@
   <div v-if="user" class="new-container">
     <div class="form-body">
       <h1>編集ページ</h1>
-      <ul v-if="errors.length > 0" class="alert alert-danger">
-        <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
-      </ul>
+      <Alert :errors="errors" type="danger" />
       <input type="text" class="title-field" v-model="post.title" placeholder="タイトル" />
       <textarea class="content-field" v-model="post.content" placeholder="投稿内容"></textarea>
       <button v-if="!loading" class="button" @click="submit">更新</button>
@@ -19,7 +17,11 @@
 <script>
 import { Auth, DB, TIMESTAMP } from '@/plugins/firebase'
 import moment from 'moment'
+import Alert from '@/components/Alert'
 export default {
+  components: {
+    Alert
+  },
   data () {
     return {
       user: null,

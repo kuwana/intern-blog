@@ -11,9 +11,7 @@
     <section class="blog-container">
       <h2>コメント</h2>
       <div v-if="user">
-        <ul v-if="errors.length > 0" class="alert">
-          <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
-        </ul>
+        <Alert :errors="errors" />
         <textarea class="comment-field" v-model="newComment" placeholder="コメントを書く"></textarea>
         <button @click="submitComment">コメントする</button>
       </div>
@@ -38,7 +36,11 @@
 <script>
 import { Auth, DB } from '@/plugins/firebase'
 import moment from 'moment'
+import Alert from '@/components/Alert'
 export default {
+  components: {
+    Alert
+  },
   data () {
     return {
       loading: false,
@@ -110,6 +112,9 @@ export default {
         })
     },
     editComment (comment) {
+      if (!this.user) {
+        return false
+      }
       this.editingComment = comment
     },
     cancelComment () {
