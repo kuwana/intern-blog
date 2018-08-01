@@ -1,6 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login-container shadow">
+      <Alert type="danger" :errors="errors"/>
       <div class="login-content">
         <form @submit.prevent="loginSubmit" class="login-form">
           <div>
@@ -24,8 +25,12 @@
 
 <script>
 import { Auth, firebase } from '@/plugins/firebase'
+import Alert from '@/components/Alert'
 import { mapMutations } from 'vuex'
 export default {
+  components: {
+    Alert
+  },
   data () {
     return {
       errors: [],
@@ -46,12 +51,14 @@ export default {
   },
   methods: {
     validate() {
+      this.errors = []
       if (this.email === '') {
         this.errors.push('メールアドレスを入力してください。')
       }
       if (this.password === '') {
         this.errors.push('パスワードを入力してください。')
       }
+      console.log(this.email, this.password, this.errors)
       if (this.errors.length > 0) {
         return false
       }
@@ -135,7 +142,8 @@ export default {
   background-color: #fff;
   color: #555;
 }
-.google > img, .google > span {
+.google > img,
+.google > span {
   display: inline-block;
   vertical-align: middle;
 }

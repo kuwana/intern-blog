@@ -5,9 +5,8 @@
       <Alert :errors="errors" type="danger" />
       <input type="text" class="title-field" v-model="post.title" placeholder="タイトル" />
       <textarea class="content-field" v-model="post.content" placeholder="投稿内容"></textarea>
-      <button v-if="!loading" class="button" @click="submit">更新</button>
-      <button v-else class="button bg-grey" disabled>送信中</button>
-      <button class="button button-danger" @click="postDelete">削除</button>
+      <TheButton type="submit" :onSubmit="submit" :loading="loading" class="margin-right">更新</TheButton>
+      <TheButton type="delete" :onDelete="postDelete">削除</TheButton>
       <input type="checkbox" id="draft" class="draft-check" v-model="post.draft">
       <label for="draft">下書き（非公開）</label>
     </div>
@@ -18,9 +17,11 @@
 import { Auth, DB, TIMESTAMP } from '@/plugins/firebase'
 import moment from 'moment'
 import Alert from '@/components/Alert'
+import TheButton from '@/components/TheButton'
 export default {
   components: {
-    Alert
+    Alert,
+    TheButton
   },
   data () {
     return {
@@ -94,20 +95,6 @@ export default {
 </script>
 
 <style scoped>
-.button-danger {
-  background: #a94442!important;
-}
-.alert {
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 1rem;
-  border: 1px solid #0000;
-  border-radius: 0.25rem;
-}
-.alert-danger {
-  background-color: #f2dede;
-  border-color: #ebcccc;
-  color: #a94442;
-}
 .draft-check {
   margin: 0 0.2rem 0 0.7rem;
 }
@@ -124,7 +111,6 @@ export default {
   border: 1px solid #ccc;
   border-radius: 3px;
 }
-
 .content-field {
   height: 45vh;
 }
@@ -132,20 +118,11 @@ export default {
 .content-field:focus {
   box-shadow: 0 0 1px 0 #ff00ff05;
 }
-.button {
-  cursor: pointer;
-  background: #14abce;
-  color: #fff;
-  border: none;
-  border-radius: 3px;
-  font-size: 1rem;
-  padding: 0.6rem 1rem;
-}
-.bg-grey {
-  background: #ccc;
-}
 .form-body {
   width: 100%;
   display: block;
+}
+.margin-right {
+  margin-right: 0.5rem;
 }
 </style>

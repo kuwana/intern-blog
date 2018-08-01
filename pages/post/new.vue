@@ -5,8 +5,7 @@
       <Alert :errors="errors" type="danger" />
       <input type="text" class="title-field" v-model="post.title" placeholder="タイトル" />
       <textarea class="content-field" v-model="post.content" placeholder="投稿内容"></textarea>
-      <button v-if="!loading" class="button" @click="submit">送信</button>
-      <button v-else class="button bg-grey" disabled>送信中</button>
+      <TheButton type="submit" :loading="loading" :onSubmit="submit">送信</TheButton>
       <input type="checkbox" id="draft" class="draft-check" v-model="post.draft">
       <label for="draft">下書き（非公開）</label>
     </div>
@@ -20,9 +19,11 @@
 import { DB, Auth, TIMESTAMP } from '@/plugins/firebase'
 import moment from 'moment'
 import Alert from '@/components/Alert'
+import TheButton from '@/components/TheButton'
 export default {
   components: {
-    Alert
+    Alert,
+    TheButton
   },
   data () {
     return {
@@ -105,18 +106,6 @@ export default {
 .title-field:focus,
 .content-field:focus {
   box-shadow: 0 0 1px 0 #ff00ff05;
-}
-.button {
-  cursor: pointer;
-  background: #14abce;
-  color: #fff;
-  border: none;
-  border-radius: 3px;
-  font-size: 1rem;
-  padding: 0.6rem 1rem;
-}
-.bg-grey {
-  background: #ccc;
 }
 .form-body {
   width: 100%;
