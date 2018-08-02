@@ -32,7 +32,8 @@ export default {
         title: '',
         content: '',
         date: moment().unix(),
-        draft: false
+        draft: false,
+        author: null
       },
       errors: [],
       loading: false,
@@ -42,6 +43,9 @@ export default {
     Auth.onAuthStateChanged(user => {
       if (user) {
         this.user = user
+        const userRef = DB.collection('users').doc(user.uid)
+        this.post.author = userRef
+        console.log(userRef)
       }
     })
   },

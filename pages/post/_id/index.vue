@@ -6,7 +6,8 @@
       <h1 class="title">
         {{ post.title }}<span v-if="post.draft">（下書き）</span>
       </h1>
-      <div class="content">{{ post.content }}</div>
+      <address>{{ post.author }}</address>
+      <article class="content">{{ post.content }}</article>
     </section>
     <BlogComment />
   </div>
@@ -27,6 +28,7 @@ export default {
       loading: false,
       user: Auth.currentUser,
       post: {
+        author: null,
         title: '',
         content: '',
         date: 0,
@@ -53,6 +55,11 @@ export default {
           .get()
           .then(doc => {
             this.post = doc.data()
+            // this.post.author.get().then(docRef => {
+            //   // this.post.author_name = docRef.data().name
+            //   console.log(docRef.data())
+            //   resolve()
+            // })
             resolve()
           })
           .catch(err => {
