@@ -2,11 +2,11 @@
   <div v-if="user" class="new-container">
     <div class="form-body">
       <h1>編集ページ</h1>
-      <Alert :errors="errors" type="danger" />
+      <AppAlert :errors="errors" type="danger" />
       <input type="text" class="title-field" v-model="post.title" placeholder="タイトル" />
       <textarea class="content-field" v-model="post.content" placeholder="投稿内容"></textarea>
-      <TheButton type="submit" :onSubmit="submit" :loading="loading" class="margin-right">更新</TheButton>
-      <TheButton type="delete" :onDelete="postDelete">削除</TheButton>
+      <TheButton type="submit" :onSubmit="updatePost" :loading="loading" class="margin-right">更新</TheButton>
+      <TheButton type="delete" :onDelete="deletePost">削除</TheButton>
       <input type="checkbox" id="draft" class="draft-check" v-model="post.draft">
       <label for="draft">下書き（非公開）</label>
     </div>
@@ -16,16 +16,18 @@
 <script>
 import { Auth, DB, TIMESTAMP } from '@/plugins/firebase'
 import moment from 'moment'
-import Alert from '@/components/Alert'
+import AppAlert from '@/components/AppAlert'
 import TheButton from '@/components/TheButton'
+import { log } from 'util';
 export default {
   components: {
-    Alert,
+    AppAlert,
     TheButton
   },
   data () {
     return {
       user: null,
+      postId: '',
       post: {
         title: '',
         content: '',
@@ -37,6 +39,7 @@ export default {
     }
   },
   mounted () {
+    this.postId = this.$route.params.id
     Auth.onAuthStateChanged(user => {
       if (!user) {
         // TODO: とりあえず前ページに戻しちゃう。403Forbiddenのほうがいいかな。
@@ -44,7 +47,7 @@ export default {
       }
       this.user = user
     })
-    DB.collection('posts').doc(this.$route.params.id).get().then(doc => {
+    DB.collection('posts').doc(this.postId).get().then(doc => {
       this.post = doc.data()
     })
   },
@@ -64,15 +67,15 @@ export default {
       }
       return true
     },
-    submit () {
+    updatePost () {
       this.loading = true
       if (!this.validate()) {
         this.loading = false
         return false
       }
-      DB.collection('posts').add(this.post)
-        .then(docRef => {
-          this.$router.push('/post/' + docRef.id)
+      DB.collection('posts').doc(this.postId).set(this.post)
+        .then(() => {
+          this.$router.push('/post/' + this.postId)
         })
         .catch(error => {
           console.error("Error adding document: ", error);
@@ -81,9 +84,9 @@ export default {
           this.loading = false
         })
     },
-    postDelete() {
+    deletePost() {
       window.alert('投稿を削除しますか？')
-      DB.collection('posts').doc(this.$route.params.id).delete().then(() => {
+      DB.collection('posts').doc(this.postId).delete().then(() => {
         this.$router.push('/')
       }).catch(err => {
         console.log(err)

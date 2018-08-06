@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login-container shadow">
-      <Alert type="danger" :errors="errors"/>
+      <AppAlert type="danger" :errors="errors"/>
       <div class="login-content">
         <form @submit.prevent="loginSubmit" class="login-form">
           <div>
@@ -25,11 +25,11 @@
 
 <script>
 import { Auth, firebase } from '@/plugins/firebase'
-import Alert from '@/components/Alert'
+import AppAlert from '@/components/AppAlert'
 import { mapMutations } from 'vuex'
 export default {
   components: {
-    Alert
+    AppAlert
   },
   data () {
     return {
@@ -58,7 +58,6 @@ export default {
       if (this.password === '') {
         this.errors.push('パスワードを入力してください。')
       }
-      console.log(this.email, this.password, this.errors)
       if (this.errors.length > 0) {
         return false
       }

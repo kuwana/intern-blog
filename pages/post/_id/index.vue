@@ -6,7 +6,7 @@
       <h1 class="title">
         {{ post.title }}<span v-if="post.draft">（下書き）</span>
       </h1>
-      <address>{{ post.author }}</address>
+      <address>by {{ post.author }}</address>
       <article class="content">{{ post.content }}</article>
     </section>
     <BlogComment />
@@ -16,11 +16,12 @@
 <script>
 import { Auth, DB } from '@/plugins/firebase'
 import moment from 'moment'
-import Alert from '@/components/Alert'
+import AppAlert from '@/components/AppAlert'
 import BlogComment from '@/components/BlogComment'
+import { log } from 'util';
 export default {
   components: {
-    Alert,
+    AppAlert,
     BlogComment
   },
   data () {
@@ -54,13 +55,12 @@ export default {
           .doc(this.$route.params.id)
           .get()
           .then(doc => {
-            this.post = doc.data()
-            // this.post.author.get().then(docRef => {
-            //   // this.post.author_name = docRef.data().name
-            //   console.log(docRef.data())
-            //   resolve()
-            // })
-            resolve()
+            const tmpPost = doc.data()
+            tmpPost.author.get().then(authorRef => {
+              tmpPost.author = authorRef.data().name
+              this.post = tmpPost
+              resolve()
+            })
           })
           .catch(err => {
             reject()

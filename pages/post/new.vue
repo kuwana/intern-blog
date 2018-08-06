@@ -2,7 +2,7 @@
   <div class="new-container">
     <div v-if="user" class="form-body">
       <h1>新規ページ</h1>
-      <Alert :errors="errors" type="danger" />
+      <AppAlert :errors="errors" type="danger" />
       <input type="text" class="title-field" v-model="post.title" placeholder="タイトル" />
       <textarea class="content-field" v-model="post.content" placeholder="投稿内容"></textarea>
       <TheButton type="submit" :loading="loading" :onSubmit="submit">送信</TheButton>
@@ -18,11 +18,11 @@
 <script>
 import { DB, Auth, TIMESTAMP } from '@/plugins/firebase'
 import moment from 'moment'
-import Alert from '@/components/Alert'
+import AppAlert from '@/components/AppAlert'
 import TheButton from '@/components/TheButton'
 export default {
   components: {
-    Alert,
+    AppAlert,
     TheButton
   },
   data () {
@@ -45,7 +45,6 @@ export default {
         this.user = user
         const userRef = DB.collection('users').doc(user.uid)
         this.post.author = userRef
-        console.log(userRef)
       }
     })
   },

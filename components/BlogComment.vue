@@ -2,7 +2,7 @@
   <section class="blog-container">
     <h2>コメント</h2>
     <div v-if="user">
-      <Alert :errors="errors" />
+      <AppAlert :errors="errors" />
       <textarea class="comment-field" v-model="newComment" placeholder="コメントを書く"></textarea>
       <button @click="submitComment">コメントする</button>
     </div>
@@ -25,10 +25,10 @@
 
 <script>
 import { Auth, DB } from '@/plugins/firebase'
-import Alert from '@/components/Alert'
+import AppAlert from '@/components/AppAlert'
 export default {
   components: {
-    Alert
+    AppAlert
   },
   data () {
     return {
@@ -133,7 +133,6 @@ export default {
           // updatedAt: new Date().now()
         })
         .then(() => {
-          console.log('updated!')
           this.editingComment = {}
           this.fetchComments()
         })
@@ -148,7 +147,6 @@ export default {
         .doc(this.editingComment.id)
         .delete()
         .then(() => {
-          console.log('deleted!')
           this.editingComment = {}
           this.fetchComments()
         })

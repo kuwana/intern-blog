@@ -10,6 +10,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "debug": "node --inspect-brk=9229 node_modules/nuxt/bin/nuxt",
     "precommit": "npm run lint",
     "heroku-postbuild": "npm run build"
   },
